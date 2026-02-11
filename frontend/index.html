@@ -1,34 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>City Vision Control</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspectAI</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <h1>Upload image</h1>
+    <header>
+        <h1>InspectAI</h1>
+        <p>Система контроля городской среды Тюменской области</p>
+    </header>
 
-  <input type="file" id="fileInput" />
-  <button onclick="send()">Detect</button>
+    <main>
+        <section class="upload-section">
+            <h2>Загрузите изображение</h2>
+            <input type="file" id="imageInput" accept="image/*">
+            <button id="uploadBtn">Отправить</button>
+        </section>
 
-  <pre id="result"></pre>
+        <section class="result-section">
+            <h2>Результаты детекции</h2>
+            <div id="resultContainer">
+                <p>Здесь появятся результаты после обработки изображения.</p>
+            </div>
+        </section>
+    </main>
 
-  <script>
-    async function send() {
-      const file = document.getElementById("fileInput").files[0];
+    <footer>
+        <p>InspectAI — Тюменская область</p>
+    </footer>
 
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch("http://localhost:8000/detect/", {
-        method: "POST",
-        body: formData
-      });
-
-      const data = await res.json();
-
-      document.getElementById("result").textContent =
-        JSON.stringify(data, null, 2);
-    }
-  </script>
+    <script src="js/app.js"></script>
 </body>
 </html>
