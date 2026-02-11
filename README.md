@@ -1,50 +1,143 @@
-# City Vision Control
+CITY VISION CONTROL
+===================
 
-Система интеллектуального контроля городской среды на основе компьютерного зрения.
+Проект: Интеллектуальная система контроля благоустройства городской среды на основе компьютерного зрения.
+Цель: детектировать объекты (вывески, баннеры, рекламные конструкции), распознавать текст и классифицировать нарушения.
 
-## Архитектура
+СОДЕРЖАНИЕ
+----------
 
-Проект организован как монорепозиторий:
+1. Архитектура проекта
+2. Backend
+3. ML-модуль
+4. Frontend
+5. Docker и запуск
+6. API
+7. Задачи команды
+8. Структура репозитория
+9. Дальнейшее развитие
 
-- frontend — веб-интерфейс загрузки изображений
-- backend — FastAPI API
-- ml — модели и обучение
-- infra — Docker и окружение
+ARCHITECTURA PROEKT
+------------------
+city-vision-control/
+|
+|-- frontend/              веб-интерфейс
+|   |-- index.html
+|   |-- css/
+|   |-- js/
+|
+|-- backend/               FastAPI
+|   |-- app/
+|       |-- main.py       запуск сервиса
+|       |-- routes/       endpoint’ы
+|       |-- services/     StubDetector, YOLODetector
+|   |-- requirements.txt
+|
+|-- ml/                    модели
+|   |-- detectors/
+|       |-- yolo_detector.py
+|   |-- training/
+|   |-- inference/
+|   |-- requirements.txt
+|
+|-- data/                  датасеты (.gitkeep)
+|-- weights/               веса моделей (.gitkeep)
+|
+|-- infra/                 Docker и окружение
+|   |-- docker-compose.yml
+|   |-- Dockerfile.backend
+|
+|-- API_CONTRACT.md        описание API
+|-- README.md
+|-- .gitignore
 
-## Быстрый запуск
+BACKEND
+-------
+- Используется FastAPI для приёма изображений и предоставления API.
+- Заглушка StubDetector возвращает JSON с ключами: boxes, scores, classes, inference_time.
+- Endpoint /detect готов к интеграции с YOLODetector после разработки ML-модуля.
 
-### Через Docker
-
-docker compose -f infra/docker-compose.yml up --build
-
-API будет доступно:
-
-http://localhost:8000/docs
-
-### Локально
-
+Установка backend:
 cd backend
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 
-## Endpoint
+ML-МОДУЛЬ
+----------
+- Основной класс: YOLODetector в ml/detectors/yolo_detector.py
+- Метод predict(image) возвращает JSON:
+  {
+    "boxes": [[x1, y1, x2, y2]],
+    "scores": [0.95],
+    "classes": ["sign"],
+    "inference_time": 0.12
+  }
 
-POST /detect/
+Пример запуска:
+if __name__ == "__main__":
+    from detectors.yolo_detector import YOLODetector
+    detector = YOLODetector("weights/yolo.pth")
+    result = detector.predict("data/test.jpg")
+    print(result)
 
-Принимает изображение и возвращает:
+Установка зависимостей ML:
+cd ml
+pip install -r requirements.txt
 
+FRONTEND
+--------
+- Веб-интерфейс позволяет загружать изображения и получать JSON с результатами.
+- Папки: css/, js/
+- Подключение к backend: http://localhost:8000/detect/
+
+DOCKER И ЗАПУСК
+---------------
+- Для воспроизводимости используется Docker и docker-compose.
+- Команды:
+docker compose -f infra/docker-compose.yml up --build
+- После запуска сервис доступен на http://localhost:8000
+
+API
+---
+Endpoint: /detect (POST)
+Формат запроса: изображение (multipart/form-data)
+Формат ответа:
 {
-  "boxes": [],
-  "scores": [],
-  "classes": [],
-  "inference_time": 0.0
+  "boxes": [[x1, y1, x2, y2]],
+  "scores": [0.95],
+  "classes": ["sign"],
+  "inference_time": 0.12
 }
 
-Сейчас используется StubDetector  
-(временная заглушка до интеграции YOLOv8).
+ЗАДАЧИ КОМАНДЫ
+---------------
+ML-инженеры:
+- Реализовать YOLODetector
+- Поддерживать формат JSON, замер времени инференса, обработку ошибок
+- Дедлайн: 16.02
 
-## Следующие шаги
+Новичок / исследователь:
+- Собирать нормативные документы по вывескам, баннерам, рекламным конструкциям
+- Создавать структурированную таблицу для классификации нарушений
+- Дедлайн первичная таблица: 15.02
+- Поддержка ML и уточнение кейсов: до 20.02
 
-- Реализация ml/detectors/yolo_detector.py
-- Интеграция YOLO в backend
-- Отрисовка bounding boxes на frontend
+СТРУКТУРА РЕПОЗИТОРИЯ
+--------------------
+- frontend/ — веб-интерфейс
+- backend/app/ — FastAPI сервисы
+- ml/ — модели, инференс, обучение
+- data/ — исходные данные и тестовые изображения
+- weights/ — сохранённые веса моделей
+- infra/ — Docker и конфигурации окружения
+- API_CONTRACT.md — контракт API между frontend, backend и ML
+
+ДАЛЬНЕЙШЕЕ РАЗВИТИЕ
+-------------------
+- Подключение новых моделей (TrOCR, EfficientNet, SegFormer)
+- Улучшение frontend с визуализацией сегментации и bounding boxes
+- Проведение экспериментов по сравнению моделей по точности и скорости
+- Автоматизация дообучения моделей на новых данных
+
+Готово к работе: основной каркас backend, frontend, ML и Docker.
+Команда может сразу создавать ветки feature/ и работать по своим задачам.
