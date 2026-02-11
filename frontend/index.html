@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>City Vision Control</title>
+</head>
+<body>
+  <h1>Upload image</h1>
+
+  <input type="file" id="fileInput" />
+  <button onclick="send()">Detect</button>
+
+  <pre id="result"></pre>
+
+  <script>
+    async function send() {
+      const file = document.getElementById("fileInput").files[0];
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("http://localhost:8000/detect/", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+
+      document.getElementById("result").textContent =
+        JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
