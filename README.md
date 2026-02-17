@@ -17,39 +17,77 @@ InspectAI
 8. Структура репозитория
 9. Дальнейшее развитие
 
-ARCHITECTURA PROEKT
+Архитектура проекта
 ------------------
-city-vision-control/
-|
-|-- frontend/              веб-интерфейс
-|   |-- index.html
-|   |-- css/
-|   |-- js/
-|
-|-- backend/               FastAPI
-|   |-- app/
-|       |-- main.py       запуск сервиса
-|       |-- routes/       endpoint’ы
-|       |-- services/     StubDetector, YOLODetector
-|   |-- requirements.txt
-|
-|-- ml/                    модели
-|   |-- detectors/
-|       |-- yolo_detector.py
-|   |-- training/
-|   |-- inference/
-|   |-- requirements.txt
-|
-|-- data/                  датасеты (.gitkeep)
-|-- weights/               веса моделей (.gitkeep)
-|
-|-- infra/                 Docker и окружение
-|   |-- docker-compose.yml
-|   |-- Dockerfile.backend
-|
-|-- API_CONTRACT.md        описание API
-|-- README.md
-|-- .gitignore
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project specific
+weights/*.pt
+weights/*.pth
+weights/*.onnx
+!weights/.gitkeep
+
+data/*
+!data/.gitkeep
+
+ml/models/*
+!ml/models/.gitkeep
+
+# Backend
+backend/__pycache__/
+backend/*.log
+backend/.env
+
+# Frontend
+frontend/node_modules/
+frontend/.env
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Notebooks
+.ipynb_checkpoints/
+*.ipynb
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.cache
+
+# Secrets
+*.key
+*.pem
+*.crt
+secrets/
 
 BACKEND
 -------
