@@ -1,6 +1,6 @@
 class YOLODetector:
     def __init__(self, model_path: str):
-        # Здесь ML-инженеры подключат модель
+
         self.model_path = model_path
 
     def predict(self, image) -> dict:
